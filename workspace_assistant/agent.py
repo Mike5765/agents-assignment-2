@@ -5,11 +5,7 @@ Part 1: Implement tools and system instruction for Calendar OR Tasks
 Part 2: Add McpToolset for GitHub integration
 """
 
-import os
 from google.adk.agents import LlmAgent
-from google.adk.tools.mcp_tool import McpToolset
-from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
-from mcp import StdioServerParameters
 from google.adk.models.anthropic_llm import AnthropicLlm
 from tools.mcp_tools import search_github_tools, execute_github_tool
 
