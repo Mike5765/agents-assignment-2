@@ -90,13 +90,11 @@ First-time use triggers an OAuth browser flow. See [docs/google_auth_setup.md](w
 
 ## How to Implement Tools
 
-Use the `@tool` decorator from ADK. Each tool should call the Google API and return a dict:
+Define each tool as a plain Python function with a clear docstring and type hints — ADK reads these to build the tool schema and auto-wraps the function when you pass it to the agent. Each tool should call the Google API and return a dict:
 
 ```python
-from google.adk.tools import tool
 from tools.auth import get_calendar_service
 
-@tool
 def list_upcoming_events(max_results: int = 10) -> dict:
     """List upcoming calendar events.
 
@@ -407,9 +405,9 @@ This assignment uses **GitHub Classroom**. Your work is submitted by pushing to 
 
 ### How Grading Works
 
-- When you push to `main`, the autograder automatically creates a **Pull Request** with your grading results
-- Check the **Pull Requests** tab on your GitHub repository to see your score and feedback
-- You can push multiple times before the deadline; each push triggers a new grading run
+- Your submission is graded from the code pushed to `main` in your repository
+- You can push multiple times before the deadline; the latest state on `main` at the deadline is what's graded
+- Make sure your final code is committed and pushed before the deadline
 
 ### Important
 
