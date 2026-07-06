@@ -43,11 +43,14 @@ def create_agent() -> LlmAgent:
     settings = Settings()
 
     # TODO Part 1: Write your system instruction
-    instruction = _base_instruction() + """
+    instruction = (
+        _base_instruction()
+        + """
 
 You also have access to GitHub tools for managing repositories and issues. You can list the user's repositories, show open issues in a repository, and create new issues when asked. Always confirm the repository name and issue details before creating a new issue.
 
 Be clear and concise in your responses, and always tell the user what action you took or are about to take."""
+    )
 
     # TODO Part 2: Create McpToolset for GitHub
 
@@ -66,11 +69,14 @@ def create_agent_with_tool_search() -> LlmAgent:
     """BONUS: Create agent with defer_loading for tool search."""
     settings = Settings()
 
-    instruction = _base_instruction() + """
+    instruction = (
+        _base_instruction()
+        + """
 
 You also have access to GitHub capabilities, but the specific tools are not loaded by default to save context. When the user asks for something GitHub-related, first call search_github_tools with a keyword describing what you need (e.g. "repositories", "issues", "create issue") to discover the exact tool name and its parameters, then call execute_github_tool with that tool name and the correct arguments to actually perform the action.
 
 Be clear and concise in your responses, and always tell the user what action you took or are about to take."""
+    )
 
     return LlmAgent(
         name="workspace_assistant_tool_search",

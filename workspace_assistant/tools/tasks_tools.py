@@ -7,7 +7,6 @@ Implement at least 3 tools for Google Tasks operations.
 from typing import Optional
 from tools.auth import get_tasks_service
 
-
 # TODO: Implement your tasks tools
 # Define each tool as a plain Python function with a clear docstring and type
 # hints (ADK reads these to build the tool schema and auto-wraps the function),
@@ -16,8 +15,9 @@ from tools.auth import get_tasks_service
 # and only needed when you want explicit control over the tool.
 
 
-def list_tasks(tasklist_id: str = "@default", show_completed: bool = False,
-                max_results: int = 20) -> dict:
+def list_tasks(
+    tasklist_id: str = "@default", show_completed: bool = False, max_results: int = 20
+) -> dict:
     """List tasks from a Google Tasks list.
 
     Args:
@@ -30,18 +30,26 @@ def list_tasks(tasklist_id: str = "@default", show_completed: bool = False,
     """
     try:
         service = get_tasks_service()
-        result = service.tasks().list(
-            tasklist=tasklist_id,
-            showCompleted=show_completed,
-            maxResults=max_results,
-        ).execute()
+        result = (
+            service.tasks()
+            .list(
+                tasklist=tasklist_id,
+                showCompleted=show_completed,
+                maxResults=max_results,
+            )
+            .execute()
+        )
         return {"status": "success", "tasks": result.get("items", [])}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-    
-    
-def create_task(title: str, notes: Optional[str] = None, due: Optional[str] = None,
-                 tasklist_id: str = "@default") -> dict:
+
+
+def create_task(
+    title: str,
+    notes: Optional[str] = None,
+    due: Optional[str] = None,
+    tasklist_id: str = "@default",
+) -> dict:
     """Create a new task on a Google Tasks list.
 
     Args:
@@ -66,8 +74,8 @@ def create_task(title: str, notes: Optional[str] = None, due: Optional[str] = No
         return {"status": "success", "task": created}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-    
-    
+
+
 def complete_task(task_id: str, tasklist_id: str = "@default") -> dict:
     """Mark a task as completed.
 
@@ -80,18 +88,27 @@ def complete_task(task_id: str, tasklist_id: str = "@default") -> dict:
     """
     try:
         service = get_tasks_service()
-        updated = service.tasks().patch(
-            tasklist=tasklist_id,
-            task=task_id,
-            body={"status": "completed"},
-        ).execute()
+        updated = (
+            service.tasks()
+            .patch(
+                tasklist=tasklist_id,
+                task=task_id,
+                body={"status": "completed"},
+            )
+            .execute()
+        )
         return {"status": "success", "task": updated}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-    
-    
-def update_task(task_id: str, title: Optional[str] = None, notes: Optional[str] = None,
-                 due: Optional[str] = None, tasklist_id: str = "@default") -> dict:
+
+
+def update_task(
+    task_id: str,
+    title: Optional[str] = None,
+    notes: Optional[str] = None,
+    due: Optional[str] = None,
+    tasklist_id: str = "@default",
+) -> dict:
     """Update the title, notes, or due date of an existing task.
 
     Args:
@@ -118,14 +135,16 @@ def update_task(task_id: str, title: Optional[str] = None, notes: Optional[str] 
         if not body:
             return {"status": "error", "message": "No fields provided to update."}
 
-        updated = service.tasks().patch(
-            tasklist=tasklist_id, task=task_id, body=body
-        ).execute()
+        updated = (
+            service.tasks()
+            .patch(tasklist=tasklist_id, task=task_id, body=body)
+            .execute()
+        )
         return {"status": "success", "task": updated}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-    
-    
+
+
 def delete_task(task_id: str, tasklist_id: str = "@default") -> dict:
     """Permanently delete a task from a Google Tasks list.
 

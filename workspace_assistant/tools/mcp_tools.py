@@ -54,7 +54,7 @@ def get_github_mcp_toolset() -> McpToolset:
     server_params = StdioServerParameters(
         command="npx",
         args=["-y", "@modelcontextprotocol/server-github"],
-        env={"GITHUB_PERSONAL_ACCESS_TOKEN": token}
+        env={"GITHUB_PERSONAL_ACCESS_TOKEN": token},
     )
 
     return McpToolset(
@@ -197,7 +197,9 @@ async def search_github_tools(query: str) -> dict:
         all_tools = await toolset.get_tools()
 
         stopwords = {"the", "a", "an", "for", "of", "in", "on", "to", "and", "my"}
-        query_words = [w for w in query.lower().split() if len(w) > 2 and w not in stopwords]
+        query_words = [
+            w for w in query.lower().split() if len(w) > 2 and w not in stopwords
+        ]
 
         scored = []
         for t in all_tools:
@@ -207,41 +209,18 @@ async def search_github_tools(query: str) -> dict:
                 scored.append((score, t))
 
         scored.sort(key=lambda pair: pair[0], reverse=True)
-        matches = [{"name": t.name, "description": t.description} for _, t in scored[:10]]
+        matches = [
+            {"name": t.name, "description": t.description} for _, t in scored[:10]
+        ]
 
         return {"status": "success", "matched_tools": matches, "count": len(matches)}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
 
-async def execute_github_tool(tool_name: str, tool_args: dict, tool_context: ToolContext) -> dict:
-    """Run a GitHub tool found via search_github_tools.
-
-    Args:
-        tool_name: Exact name from search results.
-        tool_args: Arguments matching that tool's parameters.
-        tool_context: Injected automatically.
-
-    Returns:
-        dict with the tool's result.
-    """
-    try:
-        toolset = _get_full_toolset()
-        all_tools = await toolset.get_tools()
-        target = next((t for t in all_tools if t.name == tool_name), None)
-        if target is None:
-            return {
-                "status": "error",
-                "message": f"Tool '{tool_name}' not found. Use search_github_tools first.",
-            }
-
-        result = await target.run_async(args=tool_args, tool_context=tool_context)
-        return {"status": "success", "result": result}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
-
-
-async def execute_github_tool(tool_name: str, tool_args: dict, tool_context: ToolContext) -> dict:
+async def execute_github_tool(
+    tool_name: str, tool_args: dict, tool_context: ToolContext
+) -> dict:
     """Execute a specific GitHub tool by name, found via search_github_tools.
 
     Args:
